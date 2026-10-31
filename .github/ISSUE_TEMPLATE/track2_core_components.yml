@@ -1,0 +1,28 @@
+name: "Track 2: Core Components (Intermediate Developers)"
+description: "Contribute Meta WhatsApp Cloud API handlers, KaTeX step-by-step formula renderers, or SM-2 scheduler enhancements"
+title: "[Track 2]: "
+labels: ["hacktoberfest", "track-2-core", "intermediate"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Track 2 focuses on core architectural components of Learnify: Meta WhatsApp Cloud API webhooks, KaTeX mathematical derivation renderers, and SM-2 spaced repetition schedulers.
+  - type: dropdown
+    id: component_type
+    attributes:
+      label: Target Component
+      options:
+        - "Meta WhatsApp Cloud API Webhook & Interactive Buttons"
+        - "KaTeX Step-by-Step Derivation Renderer"
+        - "SM-2 Spaced Repetition Algorithm & Retention Optimizer"
+        - "Timed Exam Quiz Simulator with Step Rubrics"
+        - "VoiceBlob Procedural Canvas Harmonics"
+    validations:
+      required: true
+  - type: textarea
+    id: implementation_details
+    attributes:
+      label: Implementation Plan
+      description: Detailed technical design, API signatures, and expected behavior.
+    validations:
+      required: true

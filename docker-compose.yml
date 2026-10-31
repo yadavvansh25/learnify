@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  # Learnify Next.js 15 Full-Stack Workspace
+  learnify-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: learnify-workspace
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - QDRANT_URL=http://qdrant-vectordb:6333
+      - WHATSAPP_VERIFY_TOKEN=learnify_secret_token_2026
+      # Set your Meta WhatsApp Cloud API credentials when going live:
+      # - WHATSAPP_ACCESS_TOKEN=your_meta_token_here
+      # - WHATSAPP_PHONE_NUMBER_ID=your_phone_number_id_here
+    depends_on:
+      - qdrant-vectordb
+
+  # Qdrant Hybrid Vector & Keyword Database
+  qdrant-vectordb:
+    image: qdrant/qdrant:latest
+    container_name: learnify-qdrant
+    restart: unless-stopped
+    ports:
+      - "6333:6333"
+      - "6334:6334"
+    volumes:
+      - qdrant_storage:/qdrant/storage
+
+volumes:
+  qdrant_storage:
+    driver: local

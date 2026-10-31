@@ -1,0 +1,27 @@
+name: "Track 3: Graph RAG & Viz (Advanced Engineers)"
+description: "Contribute to the Knowledge graph extractor (kg-runner.ts), Three.js dynamic spec compiler, or CRAG cyclic evaluator"
+title: "[Track 3]: "
+labels: ["hacktoberfest", "track-3-rag-viz", "advanced"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Track 3 tackles complex systems: Knowledge Graph relationship extraction, Three.js WebGL visualizers, and Corrective Agentic RAG (CRAG) cyclic evaluation.
+  - type: dropdown
+    id: advanced_domain
+    attributes:
+      label: Target System
+      options:
+        - "Knowledge Graph Relationship Extractor (kg-runner.ts)"
+        - "Three.js Dynamic Spec Compiler for 3D Mechanics & Orbitals"
+        - "Corrective RAG (CRAG) Cyclic Evaluator & Hallucination Filter"
+        - "Qdrant Hybrid Search & Vector Embedding Optimization"
+    validations:
+      required: true
+  - type: textarea
+    id: architecture_spec
+    attributes:
+      label: Architecture Specification & Algorithm
+      description: Mathematical formulations, graph algorithms, or 3D shader specifications.
+    validations:
+      required: true

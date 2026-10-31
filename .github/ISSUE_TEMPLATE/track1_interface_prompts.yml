@@ -1,0 +1,39 @@
+name: "Track 1: Interface & Prompts (Beginner / First-Timers)"
+description: "Contribute system prompts for Cram Mode, Feynman rubrics, regex extractors, or Geist typography audits"
+title: "[Track 1]: "
+labels: ["hacktoberfest", "track-1-interface", "good first issue"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for contributing to Learnify during Hacktoberfest!
+        Track 1 is tailored for beginner and first-time contributors working on prompt engineering, regex extractors, and UI typography.
+  - type: dropdown
+    id: contribution_type
+    attributes:
+      label: Contribution Sub-Area
+      description: What are you working on?
+      options:
+        - "Cram Mode System Prompts (/cram cards)"
+        - "Feynman Technique Scoring Rubrics & Analogies"
+        - "Regex Extractors for Exam Mark Schemes ([3 Marks], [5 Marks])"
+        - "Geist Sans / Mono Typography Audit"
+        - "Course Syllabus & PYQ Sample Dataset Addition"
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: Proposal & Scope
+      description: Describe the prompt template, regex rule, or typography fix you plan to submit.
+      placeholder: "e.g., Adding /cram template for Stokes' Theorem in Multivariable Calculus..."
+    validations:
+      required: true
+  - type: textarea
+    id: test_cases
+    attributes:
+      label: Test Cases / Verification
+      description: How will this prompt or regex pattern be tested?
+      placeholder: "Tested against 2024 Cambridge A-Level math past paper..."
+    validations:
+      required: true

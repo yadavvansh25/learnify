@@ -1,0 +1,121 @@
+@import "tailwindcss";
+@import "katex/dist/katex.min.css";
+
+:root {
+  --surface-canvas: #f6f5f2;       /* Outer chrome / topbar / app background */
+  --surface-raised: #ffffff;       /* Main content panes, PDF viewer, cards */
+  --surface-sunken: #f3f2ef;       /* Hovers, input wells, active tag chips */
+  --surface-overlay: rgba(255, 255, 255, 0.85);
+
+  --border-subtle: #e5e4df;
+  --border-strong: #d2d0c7;
+
+  --text-primary: #191816;
+  --text-secondary: #636159;
+  --text-tertiary: #9c9a92;
+
+  --status-high-yield: #e8f4ec;   /* High-frequency exam topic (Soft Sage) */
+  --status-high-yield-text: #1d6935;
+  --status-trap: #fdefef;         /* Evaluator pitfall (Soft Coral) */
+  --status-trap-text: #962828;
+
+  --status-moderate: #fef7ec;
+  --status-moderate-text: #92530a;
+  --status-mastered: #e8f4ec;
+  --status-mastered-text: #1d6935;
+
+  --accent-ink: #191816;
+  --accent-ink-contrast: #ffffff;
+}
+
+.dark {
+  --surface-canvas: #121211;
+  --surface-raised: #1a1918;
+  --surface-sunken: #222120;
+  --surface-overlay: rgba(26, 25, 24, 0.85);
+
+  --border-subtle: #2b2a28;
+  --border-strong: #3f3e3a;
+
+  --text-primary: #edece8;
+  --text-secondary: #a3a199;
+  --text-tertiary: #6b6962;
+
+  --status-high-yield: #152419;
+  --status-high-yield-text: #5ec77d;
+  --status-trap: #2e1717;
+  --status-trap-text: #e87b7b;
+
+  --status-moderate: #2b2111;
+  --status-moderate-text: #f3b552;
+  --status-mastered: #152419;
+  --status-mastered-text: #5ec77d;
+
+  --accent-ink: #edece8;
+  --accent-ink-contrast: #121211;
+}
+
+@theme inline {
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --color-canvas: var(--surface-canvas);
+  --color-raised: var(--surface-raised);
+  --color-sunken: var(--surface-sunken);
+  --color-overlay: var(--surface-overlay);
+  --color-border-subtle: var(--border-subtle);
+  --color-border-strong: var(--border-strong);
+  --color-ink-primary: var(--text-primary);
+  --color-ink-secondary: var(--text-secondary);
+  --color-ink-tertiary: var(--text-tertiary);
+  --color-high-yield: var(--status-high-yield);
+  --color-high-yield-text: var(--status-high-yield-text);
+  --color-trap: var(--status-trap);
+  --color-trap-text: var(--status-trap-text);
+  --color-moderate: var(--status-moderate);
+  --color-moderate-text: var(--status-moderate-text);
+}
+
+body {
+  background-color: var(--surface-canvas);
+  color: var(--text-primary);
+  font-family: var(--font-geist-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Crisp Ink-on-Paper Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-tertiary);
+}
+
+/* 3D Flip Card Animation Styles */
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.transform-style-3d {
+  transform-style: preserve-3d;
+}
+
+.backface-hidden {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.rotate-y-180 {
+  transform: rotateY(180deg);
+}
