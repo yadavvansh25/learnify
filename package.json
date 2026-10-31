@@ -10,15 +10,18 @@
   },
   "dependencies": {
     "clsx": "^2.1.1",
+    "framer-motion": "^14.9.0",
     "katex": "^0.19.1",
     "lucide-react": "^1.65.0",
     "next": "16.4.3",
     "react": "19.3.0",
     "react-dom": "19.3.0",
     "tailwind-merge": "^3.7.0",
-    "three": "^0.187.0"
+    "three": "^0.187.0",
+    "zod": "^4.6.7"
   },
   "devDependencies": {
+    "@tailwindcss/postcss": "^4.3.3",
     "@tailwindcss/turbopack": "^4",
     "@types/katex": "^0.16.8",
     "@types/node": "^20",
