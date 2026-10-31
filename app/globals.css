@@ -18,6 +18,8 @@
   --status-high-yield-text: #1d6935;
   --status-trap: #fdefef;         /* Evaluator pitfall (Soft Coral) */
   --status-trap-text: #962828;
+  --status-concept-tag: #f2edf8;
+  --status-concept-tag-text: #6b3fa0;
 
   --status-moderate: #fef7ec;
   --status-moderate-text: #92530a;
@@ -45,6 +47,8 @@
   --status-high-yield-text: #5ec77d;
   --status-trap: #2e1717;
   --status-trap-text: #e87b7b;
+  --status-concept-tag: #2a1f3d;
+  --status-concept-tag-text: #c09bf0;
 
   --status-moderate: #2b2111;
   --status-moderate-text: #f3b552;

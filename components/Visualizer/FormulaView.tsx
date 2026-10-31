@@ -5,10 +5,26 @@ import { FormulaRenderer } from '../shared/FormulaRenderer';
 import { MarkBadge } from '../shared/MarkBadge';
 import { ChevronDown, ChevronUp, BookOpen } from 'lucide-react';
 
-export const FormulaView: React.FC = () => {
-  const [expandedStep, setExpandedStep] = useState<number | null>(1);
+export interface StepItem {
+  step?: number;
+  label?: string;
+  title?: string;
+  latex?: string;
+  formula?: string;
+  desc?: string;
+  explanation?: string;
+  marks?: number;
+  variables?: Array<{ symbol: string; meaning: string }>;
+}
 
-  const STEPS = [
+interface FormulaViewProps {
+  steps?: StepItem[];
+}
+
+export const FormulaView: React.FC<FormulaViewProps> = ({ steps }) => {
+  const [expandedStep, setExpandedStep] = useState<number | null>(0);
+
+  const STEPS: StepItem[] = [
     {
       step: 1,
       title: 'First Law for Reversible Isothermal Expansion',
@@ -47,6 +63,15 @@ export const FormulaView: React.FC = () => {
     }
   ];
 
+  const activeSteps = (steps && steps.length > 0 ? steps : STEPS).map((s, idx) => ({
+    step: s.step ?? idx + 1,
+    title: s.title ?? s.label ?? `Step ${idx + 1}`,
+    formula: s.formula ?? s.latex ?? '',
+    explanation: s.explanation ?? s.desc ?? '',
+    marks: s.marks ?? 1,
+    variables: s.variables ?? []
+  }));
+
   return (
     <div className="space-y-4 font-sans">
       <div className="p-3 rounded-sm border border-[var(--border-subtle)] bg-[var(--surface-canvas)]">
@@ -59,7 +84,7 @@ export const FormulaView: React.FC = () => {
       </div>
 
       <div className="space-y-3">
-        {STEPS.map((s) => {
+        {activeSteps.map((s) => {
           const isExpanded = expandedStep === s.step;
 
           return (
@@ -90,19 +115,21 @@ export const FormulaView: React.FC = () => {
                     {s.explanation}
                   </p>
 
-                  <div className="space-y-1">
-                    <span className="font-mono text-[10px] uppercase tracking-wider text-[var(--text-tertiary)] font-bold">
-                      Variable Dictionary:
-                    </span>
-                    <div className="grid grid-cols-1 gap-1">
-                      {s.variables.map((v, vIdx) => (
-                        <div key={vIdx} className="flex items-center gap-2 font-mono text-[11px] p-1 rounded-xs bg-[var(--surface-sunken)]">
-                          <span className="font-bold text-[var(--text-primary)] w-14 shrink-0">{v.symbol}:</span>
-                          <span className="text-[var(--text-secondary)]">{v.meaning}</span>
-                        </div>
-                      ))}
+                  {s.variables && s.variables.length > 0 && (
+                    <div className="space-y-1">
+                      <span className="font-mono text-[10px] uppercase tracking-wider text-[var(--text-tertiary)] font-bold">
+                        Variable Dictionary:
+                      </span>
+                      <div className="grid grid-cols-1 gap-1">
+                        {s.variables.map((v, vIdx) => (
+                          <div key={vIdx} className="flex items-center gap-2 font-mono text-[11px] p-1 rounded-xs bg-[var(--surface-sunken)]">
+                            <span className="font-bold text-[var(--text-primary)] w-14 shrink-0">{v.symbol}:</span>
+                            <span className="text-[var(--text-secondary)]">{v.meaning}</span>
+                          </div>
+                        ))}
+                      </div>
                     </div>
-                  </div>
+                  )}
                 </div>
               )}
             </div>

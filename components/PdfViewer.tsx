@@ -223,6 +223,40 @@ where $k_B = 1.380649 \\times 10^{-23} \\, \\text{J/K}$ is the Boltzmann constan
             </h1>
           </div>
 
+          {/* Interactive Inline Concept Pills (Click to sync Right Pane) */}
+          <div className="p-3.5 rounded-md border border-[var(--border-subtle)] bg-[var(--surface-sunken)] space-y-2">
+            <div className="flex items-center justify-between text-xs font-semibold text-[var(--text-primary)]">
+              <span>Interactive Inline Concepts & Citations:</span>
+              <span className="font-mono text-[10px] text-[var(--text-tertiary)]">Click to sync right pane</span>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <button
+                onClick={() => onSelectConcept?.('Carnot Heat Engine & Efficiency')}
+                className="text-xs px-2.5 py-1 rounded-sm border bg-[var(--status-concept-tag)] text-[var(--status-concept-tag-text)] border-purple-200 hover:border-purple-400 transition-all cursor-pointer font-medium"
+              >
+                3D Carnot Spatial Orbitals ↗
+              </button>
+              <button
+                onClick={() => onSelectConcept?.('Isothermal Expansion Work')}
+                className="text-xs px-2.5 py-1 rounded-sm border bg-[var(--status-high-yield)] text-[var(--status-high-yield-text)] border-green-200 hover:border-green-400 transition-all cursor-pointer font-medium"
+              >
+                2D Piston Simulation ↗
+              </button>
+              <button
+                onClick={() => onSelectConcept?.('First Law of Thermodynamics')}
+                className="text-xs px-2.5 py-1 rounded-sm border bg-[var(--surface-raised)] text-[var(--text-primary)] border-[var(--border-strong)] hover:border-black transition-all cursor-pointer font-medium"
+              >
+                KaTeX Step Derivations ↗
+              </button>
+              <button
+                onClick={() => onSelectConcept?.('Entropy & Clausius Inequality')}
+                className="text-xs px-2.5 py-1 rounded-sm border bg-[var(--status-trap)] text-[var(--status-trap-text)] border-red-200 hover:border-red-400 transition-all cursor-pointer font-medium"
+              >
+                [5 Marks ★★★] PYQ Rubrics ↗
+              </button>
+            </div>
+          </div>
+
           {/* Formatted Content with KaTeX */}
           <div className="text-sm md:text-base leading-relaxed text-[var(--text-primary)] space-y-4">
             {activePageData.content.split('\n\n').map((paragraph, pIdx) => {

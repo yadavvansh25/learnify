@@ -160,6 +160,15 @@ export const ViewerClient: React.FC<ViewerClientProps> = ({ docId, initialDoc })
             docId={docId}
             title={doc.title}
             pageCount={doc.pageCount}
+            onSelectConcept={(concept) => {
+              if (concept.includes('3D') || concept.includes('Piston') || concept.includes('Derivations')) {
+                setActiveRightTool('visualizer');
+              } else if (concept.includes('Rubrics') || concept.includes('Marks')) {
+                setActiveRightTool('quizzes');
+              } else {
+                setActiveRightTool('kg');
+              }
+            }}
             onOpenVisualizerForFormula={(formula) => setActiveRightTool('visualizer')}
           />
         </div>

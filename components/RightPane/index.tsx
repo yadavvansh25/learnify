@@ -9,6 +9,7 @@ import {
   MessageSquare,
   Layers,
   ListChecks,
+  Gauge,
   ChevronDown
 } from 'lucide-react';
 import { VisualizerOrchestrator } from '../Visualizer';
@@ -17,20 +18,30 @@ import { FeynmanView } from './FeynmanView';
 import { ChatView } from './ChatView';
 import { FlashcardsView } from './FlashcardsView';
 import { QuizzesView } from './QuizzesView';
+import { FourAxisMastery } from '../Evaluator/FourAxisMastery';
 
-export type RightPaneTool = 'visualizer' | 'kg' | 'feynman' | 'chat' | 'flashcards' | 'quizzes';
+export type RightPaneTool = 'visualizer' | 'kg' | 'feynman' | 'chat' | 'flashcards' | 'quizzes' | 'evaluator';
 
 interface RightPaneShellProps {
   docId?: string;
   initialTool?: RightPaneTool;
+  activeConcept?: string;
 }
 
 export const RightPaneShell: React.FC<RightPaneShellProps> = ({
   docId = 'doc-thermo-101',
-  initialTool = 'visualizer'
+  initialTool = 'visualizer',
+  activeConcept
 }) => {
   const [activeTool, setActiveTool] = useState<RightPaneTool>(initialTool);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+
+  // Sync tool if initialTool changes
+  React.useEffect(() => {
+    if (initialTool) {
+      setActiveTool(initialTool);
+    }
+  }, [initialTool]);
 
   const TOOLS = [
     { id: 'visualizer', label: 'Visualizer', icon: Sigma, description: '3D/2D Mechanics & Derivations' },
@@ -38,7 +49,8 @@ export const RightPaneShell: React.FC<RightPaneShellProps> = ({
     { id: 'feynman', label: 'Feynman Explainer', icon: Lightbulb, description: '4-Turn Oral Viva with VoiceBlob' },
     { id: 'chat', label: 'Socratic Doubt Solver', icon: MessageSquare, description: 'Procedural Troubleshooting' },
     { id: 'flashcards', label: 'Flashcard Decks', icon: Layers, description: 'SuperMemo SM-2 Recall' },
-    { id: 'quizzes', label: 'PYQ Drills', icon: ListChecks, description: 'Timed Past Examination Papers' }
+    { id: 'quizzes', label: 'PYQ Drills', icon: ListChecks, description: 'Timed Past Examination Papers' },
+    { id: 'evaluator', label: 'Mastery Evaluator', icon: Gauge, description: '4-Axis Cognitive Mastery Grid' }
   ];
 
   const currentToolConfig = TOOLS.find(t => t.id === activeTool) || TOOLS[0];
@@ -128,6 +140,19 @@ export const RightPaneShell: React.FC<RightPaneShellProps> = ({
             {activeTool === 'chat' && <ChatView docId={docId} />}
             {activeTool === 'flashcards' && <FlashcardsView docId={docId} />}
             {activeTool === 'quizzes' && <QuizzesView docId={docId} />}
+            {activeTool === 'evaluator' && (
+              <div className="p-6 h-full overflow-y-auto bg-[var(--surface-raised)]">
+                <div className="mb-4">
+                  <h3 className="text-xs font-mono font-semibold uppercase text-[var(--text-primary)]">
+                    MASTERY EVALUATION · 4 COGNITIVE AXES
+                  </h3>
+                  <p className="text-xs text-[var(--text-secondary)] mt-0.5">
+                    Real-time non-decreasing comprehension score across memory, explanation, structure, and applications.
+                  </p>
+                </div>
+                <FourAxisMastery />
+              </div>
+            )}
           </motion.div>
         </AnimatePresence>
       </div>
