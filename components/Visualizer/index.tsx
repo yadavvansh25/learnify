@@ -45,6 +45,19 @@ export const VisualizerOrchestrator: React.FC<VisualizerOrchestratorProps> = ({
     'pendulum'
   );
 
+  // Reset active tab and 3D model whenever docId changes
+  useEffect(() => {
+    const curTab = curriculum.visualizerTabs[0];
+    setSelectedTabId(activeTabId || curTab?.id || 'tab-1');
+    setMode(curTab?.mode || '3d');
+    setCurrent3DModel(
+      active3DModel ||
+      curTab?.default3DType ||
+      curriculum.allowedModels[0]?.type ||
+      'pendulum'
+    );
+  }, [docId]);
+
   // Sync when activeTabId prop changes from left pane chip clicks
   useEffect(() => {
     if (activeTabId) {
@@ -124,7 +137,11 @@ export const VisualizerOrchestrator: React.FC<VisualizerOrchestratorProps> = ({
 
       {/* Body */}
       <div className="p-4 flex-1 min-h-0">
-        {mode === '2d-anim' && <TwoDAnimView />}
+        {mode === '2d-anim' && (
+          <TwoDAnimView
+            initialType={activeTabConfig?.subType === 'reaction' ? 'reaction' : 'carnot'}
+          />
+        )}
         {mode === '3d' && (
           <ThreeDView
             initialType={current3DModel}

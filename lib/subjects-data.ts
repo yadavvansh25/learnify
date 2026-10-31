@@ -2,11 +2,20 @@ export type SubjectCategory = "CODING" | "MATH" | "PHYSICS" | "CHEMISTRY" | "BIO
 
 export type Visualizer3DType =
   | "molecule"
+  | "benzene"
+  | "crystal-lattice"
   | "binary-tree"
-  | "vector-field"
-  | "dna-helix"
+  | "graph-network"
+  | "call-stack"
+  | "carnot-piston"
   | "pendulum"
-  | "crystal-lattice";
+  | "field-vectors"
+  | "vector-field"
+  | "eigen-transform"
+  | "coord-axes"
+  | "dna-helix"
+  | "cell-membrane"
+  | "neuron";
 
 export interface Allowed3DModel {
   id: string;
@@ -110,13 +119,13 @@ export const PHYSICS_THERMO_CURRICULUM: SubjectCurriculum = {
   description: "First Law quasi-static expansion, Carnot cycle 4-stage loop, Clausius entropy inequality, and Kelvin temperature conversion.",
   examYield: "92% HIGH YIELD [5 MARKS]",
   allowedModels: [
-    { id: "carnot-piston", label: "Carnot Cycle Piston", type: "pendulum", description: "Thermodynamic heat engine manifold and state cylinders" },
+    { id: "carnot-piston", label: "Carnot Cycle Piston", type: "carnot-piston", description: "Thermodynamic heat engine manifold and state cylinders" },
     { id: "harmonic-pendulum", label: "Harmonic Pendulum", type: "pendulum", description: "Oscillatory mechanics and restorative torque" },
-    { id: "field-vectors", label: "Field Vectors", type: "pendulum", description: "Electromagnetic flux lines and force manifolds" }
+    { id: "field-vectors", label: "Field Vectors", type: "field-vectors", description: "Electromagnetic flux lines and force manifolds" }
   ],
   visualizerTabs: [
     { id: "2d-pv-diagram", label: "2D P-V Diagram", mode: "2d-anim", subType: "carnot" },
-    { id: "3d-piston", label: "3D Piston & Reservoir (WebGL)", mode: "3d", default3DType: "pendulum" },
+    { id: "3d-piston", label: "3D Piston & Reservoir (WebGL)", mode: "3d", default3DType: "carnot-piston" },
     { id: "katex-work", label: "KaTeX Work Derivation", mode: "formula" }
   ],
   pages: [
@@ -223,8 +232,8 @@ export const CODING_TREE_CURRICULUM: SubjectCurriculum = {
   examYield: "96% CORE ALGORITHM [6 MARKS]",
   allowedModels: [
     { id: "bst-3d", label: "Binary Search Tree", type: "binary-tree", description: "Interactive node-link hierarchical tree with pulse traversal" },
-    { id: "graph-network", label: "Graph Network", type: "binary-tree", description: "Adjacency list directed network graph" },
-    { id: "call-stack", label: "Call Stack", type: "binary-tree", description: "Activation stack frames for recursive algorithms" }
+    { id: "graph-network", label: "Graph Network", type: "graph-network", description: "Adjacency list directed network graph" },
+    { id: "call-stack", label: "Call Stack", type: "call-stack", description: "Activation stack frames for recursive algorithms" }
   ],
   visualizerTabs: [
     { id: "3d-tree-traversal", label: "3D Tree Traversal (WebGL)", mode: "3d", default3DType: "binary-tree" },
@@ -308,7 +317,7 @@ export const CHEMISTRY_METHANE_CURRICULUM: SubjectCurriculum = {
   examYield: "94% HIGH YIELD [5 MARKS]",
   allowedModels: [
     { id: "tetrahedral-ch4", label: "Tetrahedral CH4", type: "molecule", description: "Central Carbon with 4 Hydrogens at 109.5° angles" },
-    { id: "benzene-ring", label: "Benzene Ring", type: "molecule", description: "Aromatic planar ring with delocalized pi cloud" },
+    { id: "benzene-ring", label: "Benzene Ring", type: "benzene", description: "Aromatic planar ring with delocalized pi cloud" },
     { id: "fcc-lattice", label: "FCC Lattice", type: "crystal-lattice", description: "Face-centered cubic unit cell with 12 coordination spheres" }
   ],
   visualizerTabs: [
@@ -387,8 +396,8 @@ export const BIOLOGY_DNA_CURRICULUM: SubjectCurriculum = {
   examYield: "95% TOP EXAM QUESTION [5 MARKS]",
   allowedModels: [
     { id: "dna-helix", label: "DNA Double Helix", type: "dna-helix", description: "B-form DNA with major/minor grooves and base rungs" },
-    { id: "cell-membrane", label: "Cell Membrane", type: "dna-helix", description: "Phospholipid bilayer with embedded proteins" },
-    { id: "neuron", label: "Neuron", type: "dna-helix", description: "Multipolar axon and dendritic synaptic arborization" }
+    { id: "cell-membrane", label: "Cell Membrane", type: "cell-membrane", description: "Phospholipid bilayer with embedded proteins" },
+    { id: "neuron", label: "Neuron", type: "neuron", description: "Multipolar axon and dendritic synaptic arborization" }
   ],
   visualizerTabs: [
     { id: "3d-dna-helix", label: "3D DNA Double Helix (WebGL)", mode: "3d", default3DType: "dna-helix" },
@@ -431,6 +440,79 @@ Because $G \\equiv C$ pairs have 3 hydrogen bonds, DNA sequences with higher GC-
   ]
 };
 
+export const BIOLOGY_NEURO_CURRICULUM: SubjectCurriculum = {
+  subject: "BIOLOGY",
+  category: "Cell Biology",
+  docId: "doc-bio-neuro-502",
+  title: "Cell Biology: Action Potential Propagation & Synaptic Cleft",
+  description: "Voltage-gated Na+/K+ channels, Hodgkin-Huxley membrane depolarization, and calcium-mediated neurotransmitter vesicle exocytosis.",
+  examYield: "88% HIGH YIELD [4 MARKS]",
+  allowedModels: [
+    { id: "neuron-3d", label: "Neuron & Synapse", type: "neuron", description: "Multipolar axon and dendritic synaptic arborization" },
+    { id: "cell-membrane-3d", label: "Cell Membrane Bilayer", type: "cell-membrane", description: "Phospholipid bilayer with voltage-gated ion channels" },
+    { id: "dna-helix-3d", label: "Nuclear DNA Helix", type: "dna-helix", description: "B-form DNA with major/minor grooves in somatic nucleus" }
+  ],
+  visualizerTabs: [
+    { id: "3d-neuron", label: "3D Neuron & Axon (WebGL)", mode: "3d", default3DType: "neuron" },
+    { id: "2d-action-potential", label: "Action Potential Curve (2D)", mode: "2d-anim", subType: "reaction" },
+    { id: "hodgkin-huxley", label: "Hodgkin-Huxley Kinetics", mode: "formula" }
+  ],
+  pages: [
+    {
+      pageNumber: 1,
+      chapter: "Chapter 1: Axonal Membrane Potential & Ion Gradients",
+      title: "Resting Membrane Potential & Voltage-Gated Na+/K+ Dynamics",
+      content: `The resting membrane potential ($V_m \\approx -70 \\text{ mV}$) of a mammalian neuron is maintained by the electrogenic $\\text{Na}^+/\\text{K}^+$-ATPase pump, actively exporting $3\\text{Na}^+$ ions for every $2\\text{K}^+$ imported.
+
+When depolarizing stimulus reaches the threshold ($\\approx -55 \\text{ mV}$):
+1. **Depolarization phase (0 to 1 ms):** Rapid activation of voltage-gated $\\text{Na}^+$ channels causes massive inward sodium flux, shooting $V_m$ up to $+30 \\text{ mV}$.
+2. **Repolarization phase (1 to 2 ms):** $\\text{Na}^+$ channels inactivate (h-gate closes) while voltage-gated $\\text{K}^+$ channels open, driving potassium efflux.
+3. **Hyperpolarization & Refractory period:** Slow closing of $\\text{K}^+$ channels dips potential to $-80 \\text{ mV}$ (undershoot) before resting potential is restored.`,
+      formulas: ["V_m = \\frac{RT}{F} \\ln \\left( \\frac{P_{\\text{K}}[\\text{K}^+]_o + P_{\\text{Na}}[\\text{Na}^+]_o}{P_{\\text{K}}[\\text{K}^+]_i + P_{\\text{Na}}[\\text{Na}^+]_i} \\right)", "V_{\\text{thresh}} \\approx -55\\text{ mV}"],
+      conceptChips: [
+        { id: "neuro1-chip-1", label: "3D Neuron & Axon (WebGL) ↗", targetTool: "visualizer", targetTab: "3d-neuron", target3DModel: "neuron" },
+        { id: "neuro1-chip-2", label: "Action Potential Curve (2D) ↗", targetTool: "visualizer", targetTab: "2d-action-potential" },
+        { id: "neuro1-chip-3", label: "Hodgkin-Huxley Kinetics ↗", targetTool: "visualizer", targetTab: "hodgkin-huxley" },
+        { id: "neuro1-chip-4", label: "[4 Marks ★★★] Goldman Eq Drill ↗", targetTool: "quizzes", badge: "PYQ" }
+      ],
+      pyqs: [
+        {
+          year: 2024,
+          paper: "Paper 42 - Neurobiology",
+          marks: 4,
+          text: "Explain why tetrodotoxin (TTX) blocks action potential propagation without affecting the resting potential.",
+          trap: "Failing to distinguish between resting leak channels and voltage-gated transient Na+ channels."
+        }
+      ]
+    },
+    {
+      pageNumber: 2,
+      chapter: "Chapter 2: Synaptic Transmission & Vesicle Exocytosis",
+      title: "Calcium Influx, SNARE Complex, and Neurotransmitter Release",
+      content: `At the presynaptic terminal, arrival of the action potential opens voltage-gated $\\text{Ca}^{2+}$ channels:
+1. Intracellular $\\text{Ca}^{2+}$ concentration spikes from $100 \\text{ nM}$ to $>10 \\, \\mu\\text{M}$ within microseconds.
+2. $\\text{Ca}^{2+}$ binds to synaptotagmin-1, triggering complete zippering of the core SNARE complex (syntaxin-1, SNAP-25, and synaptobrevin/VAMP2).
+3. Synaptic vesicles fuse with the presynaptic plasma membrane, releasing neurotransmitters (e.g., acetylcholine or glutamate) into the $20 \\text{ nm}$ synaptic cleft.`,
+      formulas: ["[\\text{Ca}^{2+}]_{\\text{in}} \\uparrow > 10\\, \\mu\\text{M}", "\\Delta t_{\\text{diffusion}} \\approx \\frac{x^2}{2D}"],
+      conceptChips: [
+        { id: "neuro2-chip-1", label: "3D Neuron & Axon (WebGL) ↗", targetTool: "visualizer", targetTab: "3d-neuron", target3DModel: "neuron" },
+        { id: "neuro2-chip-2", label: "Action Potential Curve (2D) ↗", targetTool: "visualizer", targetTab: "2d-action-potential" },
+        { id: "neuro2-chip-3", label: "Hodgkin-Huxley Kinetics ↗", targetTool: "visualizer", targetTab: "hodgkin-huxley" },
+        { id: "neuro2-chip-4", label: "[5 Marks ★★★] SNARE Fusion PYQ ↗", targetTool: "quizzes", badge: "PYQ" }
+      ],
+      pyqs: [
+        {
+          year: 2023,
+          paper: "Paper 41 - Neurobiology",
+          marks: 5,
+          text: "Describe the role of synaptotagmin as a calcium sensor in neurotransmitter exocytosis.",
+          trap: "Stating calcium directly fuses the vesicle membrane rather than binding synaptotagmin."
+        }
+      ]
+    }
+  ]
+};
+
 export const MATH_VECTORS_CURRICULUM: SubjectCurriculum = {
   subject: "MATH",
   category: "3D Calculus",
@@ -440,8 +522,8 @@ export const MATH_VECTORS_CURRICULUM: SubjectCurriculum = {
   examYield: "93% HIGH YIELD [6 MARKS]",
   allowedModels: [
     { id: "vector-surface", label: "3D Vector Surface", type: "vector-field", description: "Elliptic paraboloid z = x^2 + y^2 with gradient vector arrows" },
-    { id: "eigen-transform", label: "Eigen-Transformation", type: "vector-field", description: "Eigenvector basis stretch and rotational deformation" },
-    { id: "coord-axes", label: "Coordinate Axes", type: "vector-field", description: "Orthogonal R3 frame with right-hand orientation" }
+    { id: "eigen-transform", label: "Eigen-Transformation", type: "eigen-transform", description: "Eigenvector basis stretch and rotational deformation" },
+    { id: "coord-axes", label: "Coordinate Axes", type: "coord-axes", description: "Orthogonal R3 frame with right-hand orientation" }
   ],
   visualizerTabs: [
     { id: "3d-vector-surface", label: "3D Vector Surface (WebGL)", mode: "3d", default3DType: "vector-field" },
@@ -494,7 +576,7 @@ export const ALL_CURRICULA: Record<string, SubjectCurriculum> = {
   "doc-chem-methane-401": CHEMISTRY_METHANE_CURRICULUM,
   "doc-chem-lattice-402": CHEMISTRY_METHANE_CURRICULUM,
   "doc-bio-dna-501": BIOLOGY_DNA_CURRICULUM,
-  "doc-bio-neuro-502": BIOLOGY_DNA_CURRICULUM,
+  "doc-bio-neuro-502": BIOLOGY_NEURO_CURRICULUM,
   "doc-math-vectors-201": MATH_VECTORS_CURRICULUM,
   "doc-linear-alg-301": MATH_VECTORS_CURRICULUM,
   "doc-quantum-201": PHYSICS_THERMO_CURRICULUM,
@@ -508,13 +590,16 @@ export function getSubjectCurriculum(docId: string, subjectHint?: string): Subje
 
   // Derive by keyword prefix or subjectHint
   const lower = (docId + " " + (subjectHint || "")).toLowerCase();
+  if (lower.includes("neuro") || lower.includes("synapse") || lower.includes("502")) {
+    return BIOLOGY_NEURO_CURRICULUM;
+  }
   if (lower.includes("cs") || lower.includes("coding") || lower.includes("tree") || lower.includes("graph")) {
     return CODING_TREE_CURRICULUM;
   }
   if (lower.includes("chem") || lower.includes("methane") || lower.includes("lattice")) {
     return CHEMISTRY_METHANE_CURRICULUM;
   }
-  if (lower.includes("bio") || lower.includes("dna") || lower.includes("neuro")) {
+  if (lower.includes("bio") || lower.includes("dna")) {
     return BIOLOGY_DNA_CURRICULUM;
   }
   if (lower.includes("math") || lower.includes("vector") || lower.includes("linear")) {
@@ -614,7 +699,7 @@ export const SUBJECT_TOPICS: TopicItem[] = [
     examYield: "88% HIGH YIELD [4 MARKS]",
     pages: 2,
     chapters: 2,
-    default3DType: "dna-helix",
+    default3DType: "neuron",
     sampleQuestion: "Detail the chronological sequence of voltage-gated ion channels opening during the 1 ms peak of an axonal action potential.",
     docId: "doc-bio-neuro-502",
     tags: ["Action Potential", "Neurotransmitters", "Synapse", "Axon"]

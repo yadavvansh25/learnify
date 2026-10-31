@@ -171,6 +171,28 @@ async function main() {
     }
   })) passed++;
 
+  // Test 7: Twilio Inbound WhatsApp Webhook (x-www-form-urlencoded + TwiML XML)
+  total++;
+  if (await runTest('Twilio Inbound WhatsApp Webhook (Form-urlencoded + TwiML)', async () => {
+    const params = new URLSearchParams();
+    params.append('From', 'whatsapp:+15551234567');
+    params.append('To', 'whatsapp:+17372508034');
+    params.append('Body', '/cram Carnot');
+    params.append('MessageSid', 'SMtest_message_sid_123');
+
+    const res = await fetch(`${BASE_URL}/api/whatsapp/webhook`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: params.toString()
+    });
+
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const xml = await res.text();
+    if (!xml.includes('<Response>') || !xml.includes('<Message>') || !xml.includes('<Body>')) {
+      throw new Error(`Expected TwiML response but got: ${xml.slice(0, 100)}`);
+    }
+  })) passed++;
+
   // Test 7: Generate-Viz Spec API (Multi-Subject Question-to-3D Router)
   total++;
   if (await runTest('2D/3D VizSpec Multi-Subject Question Router', async () => {

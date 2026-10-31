@@ -4,6 +4,11 @@ export const config = {
     version: '2.1.0',
     description: 'Autonomous Exam-First Agentic RAG, Knowledge Graph & Visual Reasoning Engine',
   },
+  twilio: {
+    accountSid: process.env.TWILIO_ACCOUNT_SID || '',
+    authToken: process.env.TWILIO_AUTH_TOKEN || '',
+    whatsappNumber: process.env.TWILIO_WHATSAPP_NUMBER || 'whatsapp:+17372508034',
+  },
   whatsapp: {
     verifyToken: process.env.WHATSAPP_VERIFY_TOKEN || 'learnify_secret_token_2026',
     accessToken: process.env.WHATSAPP_ACCESS_TOKEN || '',

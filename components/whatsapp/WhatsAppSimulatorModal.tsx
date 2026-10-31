@@ -211,7 +211,7 @@ export const WhatsAppSimulatorModal: React.FC<WhatsAppSimulatorModalProps> = ({
                 <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
               </div>
               <div className="text-[10px] text-white/80">
-                Official Meta Cloud API • online
+                Twilio: +1 (737) 250-8034 • online
               </div>
             </div>
           </div>
@@ -219,10 +219,11 @@ export const WhatsAppSimulatorModal: React.FC<WhatsAppSimulatorModalProps> = ({
           <div className="flex items-center gap-2">
             <button
               onClick={handleCopyWebhookUrl}
-              className="p-1 rounded-full hover:bg-white/10 transition-colors text-white"
-              title="Copy Meta Webhook URL"
+              className="px-2 py-1 rounded-full bg-white/10 hover:bg-white/20 transition-colors text-white text-[11px] font-mono flex items-center gap-1 cursor-pointer"
+              title="Copy Twilio Inbound Webhook URL"
             >
-              {copiedWebhook ? <Check className="w-4 h-4 text-emerald-300" /> : <Copy className="w-4 h-4" />}
+              {copiedWebhook ? <Check className="w-3.5 h-3.5 text-emerald-300" /> : <Copy className="w-3.5 h-3.5" />}
+              <span>Webhook</span>
             </button>
             <button
               onClick={onClose}

@@ -218,6 +218,10 @@ class LearnifyStore {
     return undefined;
   }
 
+  public createDocument(doc: DocumentMetadata) {
+    this.documents.set(doc.id, doc);
+  }
+
   public addDocument(doc: DocumentMetadata, content: { text: string; pages: Array<{ pageNumber: number; text: string; formulas: string[] }> }) {
     this.documents.set(doc.id, doc);
     this.pdfContents.set(doc.id, content);

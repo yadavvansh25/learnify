@@ -20,6 +20,12 @@ export const TwoDAnimView: React.FC<TwoDAnimViewProps> = ({
   const [isPlaying, setIsPlaying] = useState<boolean>(true);
   const [progress, setProgress] = useState<number>(0);
 
+  useEffect(() => {
+    if (initialType) {
+      setSimType(initialType);
+    }
+  }, [initialType]);
+
   // Carnot physics state
   const [thCelsius, setThCelsius] = useState<number>(327); // 600 K
   const [tcCelsius, setTcCelsius] = useState<number>(27);  // 300 K
@@ -233,18 +239,9 @@ export const TwoDAnimView: React.FC<TwoDAnimViewProps> = ({
           </p>
         </div>
         <div className="flex items-center gap-1 font-mono text-xs">
-          <button
-            onClick={() => { setSimType('carnot'); setProgress(0); }}
-            className={`px-2 py-0.5 rounded-xs border cursor-pointer ${simType === 'carnot' ? 'bg-[var(--text-primary)] text-white' : 'border-[var(--border-subtle)] text-[var(--text-secondary)]'}`}
-          >
-            Carnot
-          </button>
-          <button
-            onClick={() => { setSimType('reaction'); setProgress(0); }}
-            className={`px-2 py-0.5 rounded-xs border cursor-pointer ${simType === 'reaction' ? 'bg-[var(--text-primary)] text-white' : 'border-[var(--border-subtle)] text-[var(--text-secondary)]'}`}
-          >
-            Reaction ΔH
-          </button>
+          <span className="px-2 py-0.5 rounded-xs bg-[var(--surface-sunken)] border border-[var(--border-subtle)] text-[var(--text-secondary)] font-semibold uppercase text-[10px]">
+            {simType === 'carnot' ? 'Carnot Cycle P-V' : 'Reaction Coordinates'}
+          </span>
         </div>
       </div>
 

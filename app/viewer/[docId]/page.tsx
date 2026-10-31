@@ -3,7 +3,7 @@ import { globalStore } from '@/lib/store';
 import { ViewerClient } from './viewer-client';
 import { notFound } from 'next/navigation';
 
-import { SUBJECT_TOPICS } from '@/lib/subjects-data';
+import { SUBJECT_TOPICS, getSubjectCurriculum } from '@/lib/subjects-data';
 
 export function generateStaticParams() {
   const customIds = [
@@ -23,13 +23,28 @@ export default async function ViewerPage({
   params: Promise<{ docId: string }>;
 }) {
   const { docId } = await params;
-  const doc = globalStore.getDocument(docId);
+  let doc = globalStore.getDocument(docId);
 
   if (!doc) {
-    // If not in store, fallback to default seed
-    const defaultDoc = globalStore.getDocument('doc-thermo-101');
-    if (!defaultDoc) notFound();
-    return <ViewerClient docId={docId} initialDoc={{ ...defaultDoc, id: docId }} />;
+    const curr = getSubjectCurriculum(docId);
+    doc = {
+      id: docId,
+      title: curr.title,
+      subject: curr.category,
+      uploadedAt: new Date().toISOString(),
+      pageCount: curr.pages.length,
+      corpusType: 'dual',
+      summary: curr.description,
+      examYieldPercentage: parseInt(curr.examYield.match(/\d+/)?.[0] || '90', 10),
+      chapters: curr.pages.map((p) => ({
+        id: `ch-${p.pageNumber}`,
+        title: p.chapter,
+        page: p.pageNumber,
+        conceptCount: p.conceptChips.length,
+        highYield: true
+      }))
+    };
+    globalStore.createDocument?.(doc);
   }
 
   return <ViewerClient docId={docId} initialDoc={doc} />;
