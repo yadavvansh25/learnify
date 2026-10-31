@@ -5,6 +5,7 @@ import {
   Flashcard,
   VizSpec
 } from './schemas';
+import { SUBJECT_TOPICS } from './subjects-data';
 
 // In-Memory Document Store
 class LearnifyStore {
@@ -187,7 +188,34 @@ class LearnifyStore {
   }
 
   public getDocument(id: string): DocumentMetadata | undefined {
-    return this.documents.get(id);
+    const existing = this.documents.get(id);
+    if (existing) return existing;
+
+    // Check in SUBJECT_TOPICS
+    const topic = SUBJECT_TOPICS.find(t => t.docId === id || t.id === id);
+    if (topic) {
+      const doc: DocumentMetadata = {
+        id,
+        title: topic.title,
+        subject: topic.subject,
+        uploadedAt: new Date().toISOString(),
+        pageCount: topic.pages,
+        corpusType: 'dual',
+        summary: topic.description,
+        examYieldPercentage: parseInt(topic.examYield) || 90,
+        chapters: Array.from({ length: topic.chapters }, (_, i) => ({
+          id: `ch-${i + 1}`,
+          title: `Chapter ${i + 1}: ${topic.category} Foundations & Core Formulations`,
+          page: i + 1,
+          conceptCount: 4,
+          highYield: true
+        }))
+      };
+      this.documents.set(id, doc);
+      return doc;
+    }
+
+    return undefined;
   }
 
   public addDocument(doc: DocumentMetadata, content: { text: string; pages: Array<{ pageNumber: number; text: string; formulas: string[] }> }) {

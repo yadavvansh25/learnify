@@ -93,8 +93,13 @@ export const VisualizerOrchestrator: React.FC<VisualizerOrchestratorProps> = ({
       {/* Body */}
       <div className="p-4 flex-1 min-h-0">
         {mode === '2d-anim' && <TwoDAnimView />}
-        {mode === '3d' && <ThreeDView />}
-        {mode === 'formula' && <FormulaView />}
+        {mode === '3d' && (
+          <ThreeDView
+            initialType={(spec as any)?.parameters?.default3DType || (spec as any)?.data?.default3DType}
+            title={spec?.title}
+          />
+        )}
+        {mode === 'formula' && <FormulaView steps={spec?.data?.steps} />}
         {mode === 'graph' && <GraphView />}
         {mode === '2d-text' && <TwoDTextView />}
       </div>

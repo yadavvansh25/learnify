@@ -20,6 +20,8 @@ import { FlashcardsView } from './FlashcardsView';
 import { QuizzesView } from './QuizzesView';
 import { FourAxisMastery } from '../Evaluator/FourAxisMastery';
 
+import { SUBJECT_TOPICS } from '@/lib/subjects-data';
+
 export type RightPaneTool = 'visualizer' | 'kg' | 'feynman' | 'chat' | 'flashcards' | 'quizzes' | 'evaluator';
 
 interface RightPaneShellProps {
@@ -35,6 +37,8 @@ export const RightPaneShell: React.FC<RightPaneShellProps> = ({
 }) => {
   const [activeTool, setActiveTool] = useState<RightPaneTool>(initialTool);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+
+  const matchedTopic = SUBJECT_TOPICS.find(t => t.docId === docId || t.id === docId);
 
   // Sync tool if initialTool changes
   React.useEffect(() => {
@@ -134,7 +138,23 @@ export const RightPaneShell: React.FC<RightPaneShellProps> = ({
             transition={{ duration: 0.15 }}
             className="w-full h-full"
           >
-            {activeTool === 'visualizer' && <VisualizerOrchestrator />}
+            {activeTool === 'visualizer' && (
+              <VisualizerOrchestrator
+                initialMode="3d"
+                spec={matchedTopic ? ({
+                  id: matchedTopic.id,
+                  mode: '3d',
+                  title: matchedTopic.title,
+                  subtitle: `${matchedTopic.subject} · ${matchedTopic.category}`,
+                  tagTrigger: matchedTopic.tags[0] || 'Concept',
+                  data: {},
+                  parameters: {
+                    default3DType: matchedTopic.default3DType,
+                    subject: matchedTopic.subject
+                  }
+                } as any) : undefined}
+              />
+            )}
             {activeTool === 'kg' && <KnowledgeGraphView docId={docId} />}
             {activeTool === 'feynman' && <FeynmanView docId={docId} />}
             {activeTool === 'chat' && <ChatView docId={docId} />}

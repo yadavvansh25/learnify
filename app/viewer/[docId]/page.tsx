@@ -3,13 +3,18 @@ import { globalStore } from '@/lib/store';
 import { ViewerClient } from './viewer-client';
 import { notFound } from 'next/navigation';
 
+import { SUBJECT_TOPICS } from '@/lib/subjects-data';
+
 export function generateStaticParams() {
-  return [
-    { docId: 'doc-thermo-101' },
-    { docId: 'doc-quantum-201' },
-    { docId: 'doc-linear-alg-301' },
-    { docId: 'doc-electro-401' }
+  const customIds = [
+    'doc-thermo-101',
+    'doc-quantum-201',
+    'doc-linear-alg-301',
+    'doc-electro-401'
   ];
+  const topicIds = SUBJECT_TOPICS.map(t => t.docId);
+  const uniqueIds = Array.from(new Set([...customIds, ...topicIds]));
+  return uniqueIds.map(docId => ({ docId }));
 }
 
 export default async function ViewerPage({

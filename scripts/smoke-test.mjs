@@ -171,15 +171,32 @@ async function main() {
     }
   })) passed++;
 
-  // Test 7: Generate-Viz Spec API
+  // Test 7: Generate-Viz Spec API (Multi-Subject Question-to-3D Router)
   total++;
-  if (await runTest('2D/3D VizSpec Spec Generator', async () => {
-    const res = await fetchJson(`${BASE_URL}/api/generate-viz`, {
+  if (await runTest('2D/3D VizSpec Multi-Subject Question Router', async () => {
+    // 1. Chemistry (Molecule)
+    const chemRes = await fetchJson(`${BASE_URL}/api/generate-viz`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ type: '3d', concept: 'Quantum Orbitals' })
+      body: JSON.stringify({ type: '3d', concept: 'Methane CH4 Tetrahedral' })
     });
-    if (!res.spec || res.spec.type !== '3d') throw new Error('Invalid VizSpec');
+    if (!chemRes.spec || chemRes.default3DType !== 'molecule') throw new Error('Failed to route chemistry to molecule');
+
+    // 2. Coding (Binary Tree)
+    const csRes = await fetchJson(`${BASE_URL}/api/generate-viz`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ type: '3d', question: 'Find balanced Binary Search Tree rotation' })
+    });
+    if (!csRes.spec || csRes.default3DType !== 'binary-tree') throw new Error('Failed to route CS to binary-tree');
+
+    // 3. Biology (DNA Helix)
+    const bioRes = await fetchJson(`${BASE_URL}/api/generate-viz`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ type: '3d', question: 'Explain Watson-Crick DNA double helix base pairing' })
+    });
+    if (!bioRes.spec || bioRes.default3DType !== 'dna-helix') throw new Error('Failed to route biology to dna-helix');
   })) passed++;
 
   console.log('\n========================================');
