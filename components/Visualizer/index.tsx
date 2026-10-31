@@ -152,7 +152,13 @@ export const VisualizerOrchestrator: React.FC<VisualizerOrchestratorProps> = ({
           />
         )}
         {mode === 'formula' && <FormulaView steps={spec?.data?.steps} />}
-        {mode === 'graph' && <GraphView />}
+        {mode === 'graph' && (
+          <GraphView
+            initialQuestion={spec?.data?.question || curriculum.title}
+            docId={docId}
+            subject={curriculum.subject}
+          />
+        )}
         {mode === '2d-text' && <TwoDTextView />}
       </div>
     </div>

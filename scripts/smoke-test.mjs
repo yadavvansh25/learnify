@@ -221,6 +221,36 @@ async function main() {
     if (!bioRes.spec || bioRes.default3DType !== 'dna-helix') throw new Error('Failed to route biology to dna-helix');
   })) passed++;
 
+  // Test 9: Real-Time Question-to-Graph & Function Plotter API
+  total++;
+  if (await runTest('Real-Time Question-to-Graph & Function Plotter API', async () => {
+    // 1. Damped harmonic function plot
+    const plotRes = await fetchJson(`${BASE_URL}/api/generate-graph`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ question: 'f(x) = sin(1.8*x) * exp(-0.15*x)', subject: 'PHYSICS' })
+    });
+    if (!plotRes.success || plotRes.graph.type !== 'function-plot') {
+      throw new Error('Failed to generate function-plot');
+    }
+    if (!plotRes.graph.dataPoints || plotRes.graph.dataPoints.length === 0) {
+      throw new Error('Missing dataPoints in graph response');
+    }
+
+    // 2. Concept Graph
+    const cgRes = await fetchJson(`${BASE_URL}/api/generate-graph`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ question: 'Concept Graph: Thermodynamics to Carnot Engine', subject: 'PHYSICS' })
+    });
+    if (!cgRes.success || cgRes.graph.type !== 'concept-graph') {
+      throw new Error('Failed to generate concept-graph');
+    }
+    if (!cgRes.graph.nodes || cgRes.graph.nodes.length === 0) {
+      throw new Error('Missing nodes in concept-graph response');
+    }
+  })) passed++;
+
   console.log('\n========================================');
   console.log(`SMOKE TEST RESULT: ${passed}/${total} PASSED`);
   console.log('========================================\n');

@@ -126,7 +126,8 @@ export const PHYSICS_THERMO_CURRICULUM: SubjectCurriculum = {
   visualizerTabs: [
     { id: "2d-pv-diagram", label: "2D P-V Diagram", mode: "2d-anim", subType: "carnot" },
     { id: "3d-piston", label: "3D Piston & Reservoir (WebGL)", mode: "3d", default3DType: "carnot-piston" },
-    { id: "katex-work", label: "KaTeX Work Derivation", mode: "formula" }
+    { id: "katex-work", label: "KaTeX Work Derivation", mode: "formula" },
+    { id: "graph-plotter", label: "Real-Time Graph Plotter", mode: "graph" }
   ],
   pages: [
     {
@@ -238,7 +239,8 @@ export const CODING_TREE_CURRICULUM: SubjectCurriculum = {
   visualizerTabs: [
     { id: "3d-tree-traversal", label: "3D Tree Traversal (WebGL)", mode: "3d", default3DType: "binary-tree" },
     { id: "memory-stack-2d", label: "Memory Stack (2D)", mode: "2d-text" },
-    { id: "recurrence-formula", label: "Recurrence Formula", mode: "formula" }
+    { id: "recurrence-formula", label: "Recurrence Formula", mode: "formula" },
+    { id: "big-o-plotter", label: "Big-O Asymptotics Plotter", mode: "graph" }
   ],
   pages: [
     {
@@ -323,7 +325,8 @@ export const CHEMISTRY_METHANE_CURRICULUM: SubjectCurriculum = {
   visualizerTabs: [
     { id: "3d-tetrahedral", label: "3D Tetrahedral CH₄ (WebGL)", mode: "3d", default3DType: "molecule" },
     { id: "2d-reaction", label: "2D Reaction Activation", mode: "2d-anim", subType: "reaction" },
-    { id: "katex-bonds", label: "KaTeX Bond Energies", mode: "formula" }
+    { id: "katex-bonds", label: "KaTeX Bond Energies", mode: "formula" },
+    { id: "reaction-plotter", label: "Kinetics Graph Plotter", mode: "graph" }
   ],
   pages: [
     {
@@ -402,7 +405,8 @@ export const BIOLOGY_DNA_CURRICULUM: SubjectCurriculum = {
   visualizerTabs: [
     { id: "3d-dna-helix", label: "3D DNA Double Helix (WebGL)", mode: "3d", default3DType: "dna-helix" },
     { id: "2d-action-potential", label: "Action Potential Curve (2D)", mode: "2d-anim", subType: "reaction" },
-    { id: "replication-kinetics", label: "Replication Kinetics", mode: "formula" }
+    { id: "replication-kinetics", label: "Replication Kinetics", mode: "formula" },
+    { id: "bio-graph-plotter", label: "Genetics Graph Plotter", mode: "graph" }
   ],
   pages: [
     {
@@ -455,7 +459,8 @@ export const BIOLOGY_NEURO_CURRICULUM: SubjectCurriculum = {
   visualizerTabs: [
     { id: "3d-neuron", label: "3D Neuron & Axon (WebGL)", mode: "3d", default3DType: "neuron" },
     { id: "2d-action-potential", label: "Action Potential Curve (2D)", mode: "2d-anim", subType: "reaction" },
-    { id: "hodgkin-huxley", label: "Hodgkin-Huxley Kinetics", mode: "formula" }
+    { id: "hodgkin-huxley", label: "Hodgkin-Huxley Kinetics", mode: "formula" },
+    { id: "neuro-graph-plotter", label: "Voltage Graph Plotter", mode: "graph" }
   ],
   pages: [
     {
