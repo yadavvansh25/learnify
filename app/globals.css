@@ -123,3 +123,31 @@ body {
 .rotate-y-180 {
   transform: rotateY(180deg);
 }
+
+/* Reflect-grade Minimalist Tab & Concept Highlighting */
+.tab-solid-ink {
+  background: var(--text-primary);
+  color: var(--surface-raised);
+  border-color: var(--text-primary);
+  font-weight: 600;
+}
+
+.tab-subtle-border {
+  background: var(--surface-raised);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-subtle);
+}
+
+.tab-subtle-border:hover {
+  color: var(--text-primary);
+  border-color: var(--border-strong);
+}
+
+/* Bounding Box Highlight on Concept Chip Click */
+.chip-focused {
+  outline: 1.5px solid var(--text-primary) !important;
+  outline-offset: 1px !important;
+  box-shadow: 0 0 0 1px var(--text-primary);
+  transition: outline 0.15s ease, box-shadow 0.15s ease;
+}
+

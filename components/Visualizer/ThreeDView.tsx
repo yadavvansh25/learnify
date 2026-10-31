@@ -4,8 +4,8 @@ import React, { useRef, useEffect, useState } from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { MarkBadge } from '../shared/MarkBadge';
-import { Visualizer3DType } from '@/lib/subjects-data';
-import { Play, Pause, RotateCcw, Box, Dna, GitBranch, Compass, Layers, Atom } from 'lucide-react';
+import { Allowed3DModel, Visualizer3DType } from '@/lib/subjects-data';
+import { Play, Pause, RotateCcw, Maximize2, Minimize2 } from 'lucide-react';
 
 export interface AtomData {
   elem: string;
@@ -18,18 +18,27 @@ interface ThreeDViewProps {
   initialType?: Visualizer3DType;
   atoms?: AtomData[];
   title?: string;
+  category?: string;
+  allowedModels?: Allowed3DModel[];
+  onSelectModel?: (type: Visualizer3DType) => void;
 }
 
 export const ThreeDView: React.FC<ThreeDViewProps> = ({
   initialType = 'molecule',
   atoms,
-  title
+  title,
+  category,
+  allowedModels,
+  onSelectModel
 }) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
+  const controlsRef = useRef<OrbitControls | null>(null);
   const [modelType, setModelType] = useState<Visualizer3DType>(initialType);
   const [isRotating, setIsRotating] = useState<boolean>(true);
   const [speed, setSpeed] = useState<number>(1.0);
   const [wireframe, setWireframe] = useState<boolean>(false);
+  const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
 
   useEffect(() => {
     if (initialType) {
@@ -55,6 +64,7 @@ export const ThreeDView: React.FC<ThreeDViewProps> = ({
     // 2. Camera setup
     const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
     camera.position.set(3.8, 2.8, 4.8);
+    cameraRef.current = camera;
 
     // 3. Renderer with antialiasing & DPR capped at 2
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
@@ -69,6 +79,7 @@ export const ThreeDView: React.FC<ThreeDViewProps> = ({
     controls.dampingFactor = 0.05;
     controls.autoRotate = isRotating;
     controls.autoRotateSpeed = 1.2 * speed;
+    controlsRef.current = controls;
 
     // 5. Lighting
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.85);
@@ -389,18 +400,28 @@ export const ThreeDView: React.FC<ThreeDViewProps> = ({
     };
   }, [modelType, isRotating, speed, wireframe]);
 
-  const MODEL_CONFIGS: Array<{ type: Visualizer3DType; label: string; icon: any }> = [
-    { type: 'molecule', label: 'Tetrahedral CH₄', icon: Atom },
-    { type: 'binary-tree', label: 'Binary Search Tree', icon: GitBranch },
-    { type: 'dna-helix', label: 'DNA Double Helix', icon: Dna },
-    { type: 'pendulum', label: 'Harmonic Pendulum', icon: Compass },
-    { type: 'vector-field', label: '3D Vector Surface', icon: Layers },
-    { type: 'crystal-lattice', label: 'FCC Crystal Lattice', icon: Box },
-  ];
+  const handleResetCamera = () => {
+    if (cameraRef.current && controlsRef.current) {
+      cameraRef.current.position.set(3.8, 2.8, 4.8);
+      controlsRef.current.target.set(0, 0, 0);
+      controlsRef.current.update();
+    }
+  };
+
+  const toggleFullscreen = () => {
+    if (!containerRef.current) return;
+    if (!document.fullscreenElement) {
+      containerRef.current.requestFullscreen?.().catch(() => {});
+      setIsFullscreen(true);
+    } else {
+      document.exitFullscreen?.().catch(() => {});
+      setIsFullscreen(false);
+    }
+  };
 
   return (
     <div className="space-y-3 font-sans h-full flex flex-col justify-between">
-      {/* 3D Model Selector Toolbar */}
+      {/* 3D Model Selector Toolbar (Strictly Subject Scoped) */}
       <div className="p-3 rounded-sm border border-[var(--border-subtle)] bg-[var(--surface-canvas)] flex flex-col gap-2">
         <div className="flex items-center justify-between">
           <div>
@@ -408,33 +429,38 @@ export const ThreeDView: React.FC<ThreeDViewProps> = ({
               {title || 'Dynamic Three.js WebGL Engine'}
             </h4>
             <p className="text-xs text-[var(--text-secondary)] mt-0.5">
-              Subject-tailored interactive geometry with orbital physics controls.
+              Subject-isolated interactive geometry with orbital physics controls.
             </p>
           </div>
-          <MarkBadge variant="high_yield" text="WebGL Accelerated" />
+          <div className="px-2 py-0.5 rounded-xs text-[10px] font-mono tracking-wider uppercase font-semibold bg-[var(--surface-sunken)] text-[var(--text-secondary)] border border-[var(--border-subtle)]">
+            {category ? `${category.toUpperCase()} • 3D` : '3D WEBGL'}
+          </div>
         </div>
 
-        {/* 6 Subject Model Pills */}
-        <div className="flex flex-wrap gap-1.5 pt-1">
-          {MODEL_CONFIGS.map((cfg) => {
-            const Icon = cfg.icon;
-            const isSelected = modelType === cfg.type;
-            return (
-              <button
-                key={cfg.type}
-                onClick={() => setModelType(cfg.type)}
-                className={`px-2.5 py-1 rounded-xs text-xs font-mono flex items-center gap-1.5 transition-all cursor-pointer border ${
-                  isSelected
-                    ? 'bg-[var(--text-primary)] text-[var(--surface-raised)] border-[var(--text-primary)] font-bold shadow-xs'
-                    : 'bg-[var(--surface-raised)] text-[var(--text-secondary)] border-[var(--border-subtle)] hover:text-[var(--text-primary)] hover:border-[var(--border-strong)]'
-                }`}
-              >
-                <Icon className="w-3.5 h-3.5" />
-                <span>{cfg.label}</span>
-              </button>
-            );
-          })}
-        </div>
+        {/* Subject-scoped allowed models ONLY - never any mixed pills */}
+        {allowedModels && allowedModels.length > 1 && (
+          <div className="flex flex-wrap gap-1.5 pt-1">
+            {allowedModels.map((m) => {
+              const isSelected = modelType === m.type;
+              return (
+                <button
+                  key={m.id}
+                  onClick={() => {
+                    setModelType(m.type);
+                    onSelectModel?.(m.type);
+                  }}
+                  className={`px-2.5 py-1 rounded-xs text-xs font-mono flex items-center gap-1.5 transition-all cursor-pointer border ${
+                    isSelected
+                      ? 'bg-[var(--text-primary)] text-[var(--surface-raised)] border-[var(--text-primary)] font-bold shadow-xs'
+                      : 'bg-[var(--surface-raised)] text-[var(--text-secondary)] border-[var(--border-subtle)] hover:text-[var(--text-primary)] hover:border-[var(--border-strong)]'
+                  }`}
+                >
+                  <span>{m.label}</span>
+                </button>
+              );
+            })}
+          </div>
+        )}
       </div>
 
       {/* 3D WebGL Canvas Viewport */}
@@ -473,7 +499,7 @@ export const ThreeDView: React.FC<ThreeDViewProps> = ({
             onChange={(e) => setSpeed(Number(e.target.value))}
             className="w-20 accent-[var(--text-primary)]"
           />
-          <span className="text-[11px] w-6">{speed}x</span>
+          <span className="text-[11px] w-6">{speed.toFixed(1)}x</span>
         </div>
 
         {modelType === 'vector-field' && (
@@ -490,6 +516,25 @@ export const ThreeDView: React.FC<ThreeDViewProps> = ({
             </label>
           </div>
         )}
+
+        <div className="flex items-center gap-1.5">
+          <button
+            onClick={handleResetCamera}
+            className="p-1.5 rounded-xs bg-[var(--surface-raised)] border border-[var(--border-subtle)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:border-[var(--border-strong)] flex items-center gap-1 cursor-pointer transition-colors"
+            title="Reset Camera Position"
+          >
+            <RotateCcw className="w-3.5 h-3.5" />
+            <span className="text-[11px] hidden sm:inline">Reset Camera</span>
+          </button>
+
+          <button
+            onClick={toggleFullscreen}
+            className="p-1.5 rounded-xs bg-[var(--surface-raised)] border border-[var(--border-subtle)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:border-[var(--border-strong)] flex items-center cursor-pointer transition-colors"
+            title={isFullscreen ? 'Exit Fullscreen' : 'Fullscreen View'}
+          >
+            {isFullscreen ? <Minimize2 className="w-3.5 h-3.5" /> : <Maximize2 className="w-3.5 h-3.5" />}
+          </button>
+        </div>
       </div>
     </div>
   );

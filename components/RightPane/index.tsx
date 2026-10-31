@@ -20,7 +20,7 @@ import { FlashcardsView } from './FlashcardsView';
 import { QuizzesView } from './QuizzesView';
 import { FourAxisMastery } from '../Evaluator/FourAxisMastery';
 
-import { SUBJECT_TOPICS } from '@/lib/subjects-data';
+import { SUBJECT_TOPICS, Visualizer3DType } from '@/lib/subjects-data';
 
 export type RightPaneTool = 'visualizer' | 'kg' | 'feynman' | 'chat' | 'flashcards' | 'quizzes' | 'evaluator';
 
@@ -28,12 +28,16 @@ interface RightPaneShellProps {
   docId?: string;
   initialTool?: RightPaneTool;
   activeConcept?: string;
+  activeVisualizerTab?: string;
+  active3DModel?: Visualizer3DType;
 }
 
 export const RightPaneShell: React.FC<RightPaneShellProps> = ({
   docId = 'doc-thermo-101',
   initialTool = 'visualizer',
-  activeConcept
+  activeConcept,
+  activeVisualizerTab,
+  active3DModel
 }) => {
   const [activeTool, setActiveTool] = useState<RightPaneTool>(initialTool);
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -140,6 +144,9 @@ export const RightPaneShell: React.FC<RightPaneShellProps> = ({
           >
             {activeTool === 'visualizer' && (
               <VisualizerOrchestrator
+                docId={docId}
+                activeTabId={activeVisualizerTab}
+                active3DModel={active3DModel}
                 initialMode="3d"
                 spec={matchedTopic ? ({
                   id: matchedTopic.id,

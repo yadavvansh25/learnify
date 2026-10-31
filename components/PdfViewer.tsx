@@ -1,133 +1,57 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   ChevronLeft,
   ChevronRight,
   ZoomIn,
   ZoomOut,
-  Search,
   BookOpen,
   FileText,
   Sliders,
-  AlertTriangle,
-  ArrowRight
+  ShieldCheck
 } from 'lucide-react';
 import { FormulaRenderer } from './shared/FormulaRenderer';
 import { MarkBadge } from './shared/MarkBadge';
+import { getSubjectCurriculum, ConceptChip } from '@/lib/subjects-data';
 
 interface PdfViewerProps {
   docId: string;
   title: string;
   pageCount?: number;
   onSelectConcept?: (concept: string) => void;
+  onSelectConceptChip?: (chip: ConceptChip) => void;
+  onChapterChange?: (chapter: string) => void;
   onOpenVisualizerForFormula?: (formula: string) => void;
 }
 
 export const PdfViewer: React.FC<PdfViewerProps> = ({
   docId,
   title,
-  pageCount = 3,
+  pageCount,
   onSelectConcept,
+  onSelectConceptChip,
+  onChapterChange,
   onOpenVisualizerForFormula
 }) => {
-  const [currentPage, setCurrentPage] = useState<number>(2); // Default to Chapter 2 (Carnot cycle)
+  const curriculum = getSubjectCurriculum(docId);
+  const PAGES = curriculum.pages;
+  const effectivePageCount = pageCount || PAGES.length;
+
+  const [currentPage, setCurrentPage] = useState<number>(() => {
+    return PAGES.length >= 2 ? 2 : 1;
+  });
   const [zoomLevel, setZoomLevel] = useState<number>(100);
-  const [searchQuery, setSearchQuery] = useState<string>('');
-
-  const PAGES = [
-    {
-      pageNumber: 1,
-      chapter: 'Chapter 1: Foundations & The First Law',
-      title: 'Internal Energy and Quasi-Static Work',
-      content: `The First Law of Thermodynamics is the formulation of the principle of conservation of energy for thermodynamic systems. For an infinitesimal quasi-static transformation, the differential change in internal energy $dU$ is given by:
-
-$$dU = \\delta Q - \\delta W$$
-
-where $\\delta Q$ represents heat supplied to the system, and $\\delta W = P dV$ is the mechanical work performed by the system against external pressure $P$.
-
-Important Note on Sign Convention: In modern IUPAC physics examinations, work done BY the system on the surroundings is treated as positive in $dU = \\delta Q - \\delta W$. When computing expansion work:
-
-$$W = \\int_{V_i}^{V_f} P(V) \\, dV$$
-
-For an ideal gas undergoing an isothermal process ($T = \\text{constant}$), the equation of state $PV = nRT$ yields:
-
-$$W = nRT \\ln\\left(\\frac{V_f}{V_i}\\right) = nRT \\ln\\left(\\frac{P_i}{P_f}\\right)$$
-
-Because temperature is constant for an ideal gas, $\\Delta U = 0$, implying $Q = W$. All absorbed heat is converted completely into boundary work during that single isothermal stroke.`,
-      formulas: ['dU = \\delta Q - \\delta W', 'W = nRT \\ln(V_f / V_i)'],
-      pyqs: [
-        {
-          year: 2023,
-          paper: 'Paper 41',
-          marks: 5,
-          text: '0.50 moles of gas expands at 289 K to 3x volume. Calculate work done W.',
-          trap: 'Using W = P*ΔV instead of logarithmic integral W = nRT ln(Vf/Vi).'
-        }
-      ]
-    },
-    {
-      pageNumber: 2,
-      chapter: 'Chapter 2: Reversible Cycles & The Carnot Engine',
-      title: 'The Four Stages of the Carnot Cycle',
-      content: `Nicolas Léonard Sadi Carnot established in 1824 that the maximum theoretical efficiency of any heat engine operating between two thermal reservoirs at temperatures $T_H$ (hot) and $T_C$ (cold) depends solely on these absolute temperatures.
-
-The ideal Carnot Cycle consists of four sequential, reversible strokes:
-
-1. Stage 1 -> 2: Reversible Isothermal Expansion at $T_H$. The gas expands from $V_1$ to $V_2$, absorbing heat $Q_H = nRT_H \\ln(V_2/V_1)$.
-2. Stage 2 -> 3: Reversible Adiabatic Expansion from $T_H$ down to $T_C$. No heat enters or leaves ($Q = 0$). The gas obeys $P V^\\gamma = \\text{constant}$ and $T V^{\\gamma-1} = \\text{constant}$.
-3. Stage 3 -> 4: Reversible Isothermal Compression at $T_C$. The gas is compressed from $V_3$ to $V_4$, ejecting heat $|Q_C| = nRT_C \\ln(V_3/V_4)$ to the cold sink.
-4. Stage 4 -> 1: Reversible Adiabatic Compression back to $T_H$. Work is done ON the gas, elevating its temperature back to $T_H$ to close the state loop.
-
-Net thermal efficiency is defined as:
-
-$$\\eta = \\frac{W_{\\text{net}}}{Q_H} = \\frac{Q_H - |Q_C|}{Q_H} = 1 - \\frac{T_C}{T_H}$$
-
-Crucial Exam Theorem: No real heat engine operating between two given reservoirs can be more efficient than a Carnot engine operating between the same reservoirs.`,
-      formulas: ['\\eta = 1 - \\frac{T_C}{T_H}', 'P V^\\gamma = \\text{const}'],
-      pyqs: [
-        {
-          year: 2024,
-          paper: 'Paper 42',
-          marks: 5,
-          text: 'A geothermal plant operates between 280 °C and 25 °C. Calculate max efficiency.',
-          trap: 'CRITICAL TRAP: Substituting Celsius directly into 1 - (25/280) = 91.1%! Must use Kelvin: 1 - (298/553) = 46.1%.'
-        }
-      ]
-    },
-    {
-      pageNumber: 3,
-      chapter: 'Chapter 3: Entropy & The Second Law',
-      title: 'Clausius Inequality and Thermodynamic Entropy',
-      content: `Rudolf Clausius formulated the Second Law of Thermodynamics mathematically through the Clausius Theorem. For any thermodynamic cycle:
-
-$$\\oint \\frac{\\delta Q_{\\text{rev}}}{T} \\le 0$$
-
-where equality holds strictly for reversible cycles, and the strict inequality holds for irreversible cycles. This guarantees the existence of a state function called Entropy $S$:
-
-$$dS = \\frac{\\delta Q_{\\text{rev}}}{T}, \\quad \\Delta S = S_B - S_A = \\int_A^B \\frac{\\delta Q_{\\text{rev}}}{T}$$
-
-For an isolated system undergoing any natural process:
-
-$$\\Delta S_{\\text{isolated}} \\ge 0$$
-
-Microscopic Boltzmann interpretation:
-$$S = k_B \\ln(\\Omega)$$
-where $k_B = 1.380649 \\times 10^{-23} \\, \\text{J/K}$ is the Boltzmann constant and $\\Omega$ represents the number of accessible microstates.`,
-      formulas: ['dS = \\frac{\\delta Q_{\\text{rev}}}{T}', 'S = k_B \\ln(\\Omega)'],
-      pyqs: [
-        {
-          year: 2022,
-          paper: 'Paper 2',
-          marks: 3,
-          text: 'State Clausius Second Law and calculate entropy change of 0.2 kg melting ice at 0 °C.',
-          trap: 'Using room temperature 298 K in denominator instead of melting ice temperature 273 K.'
-        }
-      ]
-    }
-  ];
+  const [activeChipId, setActiveChipId] = useState<string | null>(null);
 
   const activePageData = PAGES[currentPage - 1] || PAGES[0];
+
+  // Notify parent of chapter change whenever current page or active page changes
+  useEffect(() => {
+    if (activePageData?.chapter) {
+      onChapterChange?.(activePageData.chapter);
+    }
+  }, [currentPage, activePageData, onChapterChange]);
 
   return (
     <div className="h-full flex flex-col bg-[var(--surface-raised)] border-r border-[var(--border-subtle)] overflow-hidden font-sans">
@@ -152,11 +76,11 @@ where $k_B = 1.380649 \\times 10^{-23} \\, \\text{J/K}$ is the Boltzmann constan
             <ChevronLeft className="w-3.5 h-3.5" />
           </button>
           <span className="font-mono text-xs px-2 text-[var(--text-primary)]">
-            {currentPage} / {pageCount}
+            {currentPage} / {effectivePageCount}
           </span>
           <button
-            onClick={() => setCurrentPage(p => Math.min(pageCount, p + 1))}
-            disabled={currentPage >= pageCount}
+            onClick={() => setCurrentPage(p => Math.min(effectivePageCount, p + 1))}
+            disabled={currentPage >= effectivePageCount}
             className="p-1 rounded-sm border border-[var(--border-subtle)] bg-[var(--surface-raised)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] disabled:opacity-30 cursor-pointer"
             title="Next Page"
           >
@@ -194,13 +118,14 @@ where $k_B = 1.380649 \\times 10^{-23} \\, \\text{J/K}$ is the Boltzmann constan
           <span className="font-mono text-[11px] px-1.5 py-0.5 rounded-xs bg-[var(--surface-sunken)] border border-[var(--border-subtle)] text-[var(--text-primary)]">
             Corpus A: Syllabus §{currentPage}.1
           </span>
-          <span className="font-mono text-[11px] px-1.5 py-0.5 rounded-xs bg-[var(--status-high-yield)] text-[var(--status-high-yield-text)] border border-[#c4e3cb] dark:border-[#1e3b26]">
-            Corpus B: 10-Yr PYQ Tagged
+          <span className="text-[var(--text-tertiary)]">↔</span>
+          <span className="font-mono text-[11px] px-1.5 py-0.5 rounded-xs bg-[var(--status-high-yield)] border border-[#c5e4cc] text-[var(--status-high-yield-text)] font-semibold">
+            Corpus B: Past 10-Year Exam Questions
           </span>
         </div>
 
         <span className="font-mono text-[11px] font-semibold text-[var(--status-high-yield-text)]">
-          +1.8x High-Yield Priority
+          {curriculum.examYield}
         </span>
       </div>
 
@@ -214,7 +139,7 @@ where $k_B = 1.380649 \\times 10^{-23} \\, \\text{J/K}$ is the Boltzmann constan
           <div className="border-b border-[var(--border-subtle)] pb-4">
             <div className="flex items-center gap-2 mb-1.5">
               <span className="font-mono text-xs uppercase tracking-wider text-[var(--text-tertiary)] font-bold">
-                Page {currentPage} of {pageCount} • {title}
+                Page {currentPage} of {effectivePageCount} • {curriculum.title}
               </span>
               <MarkBadge variant="high_yield" text="High Exam Frequency" />
             </div>
@@ -223,37 +148,41 @@ where $k_B = 1.380649 \\times 10^{-23} \\, \\text{J/K}$ is the Boltzmann constan
             </h1>
           </div>
 
-          {/* Interactive Inline Concept Pills (Click to sync Right Pane) */}
+          {/* Interactive Inline Concept Pills (Subject-Scoped - Click to sync Right Pane) */}
           <div className="p-3.5 rounded-md border border-[var(--border-subtle)] bg-[var(--surface-sunken)] space-y-2">
             <div className="flex items-center justify-between text-xs font-semibold text-[var(--text-primary)]">
               <span>Interactive Inline Concepts & Citations:</span>
               <span className="font-mono text-[10px] text-[var(--text-tertiary)]">Click to sync right pane</span>
             </div>
             <div className="flex flex-wrap gap-2">
-              <button
-                onClick={() => onSelectConcept?.('Carnot Heat Engine & Efficiency')}
-                className="text-xs px-2.5 py-1 rounded-sm border bg-[var(--status-concept-tag)] text-[var(--status-concept-tag-text)] border-purple-200 hover:border-purple-400 transition-all cursor-pointer font-medium"
-              >
-                3D Carnot Spatial Orbitals ↗
-              </button>
-              <button
-                onClick={() => onSelectConcept?.('Isothermal Expansion Work')}
-                className="text-xs px-2.5 py-1 rounded-sm border bg-[var(--status-high-yield)] text-[var(--status-high-yield-text)] border-green-200 hover:border-green-400 transition-all cursor-pointer font-medium"
-              >
-                2D Piston Simulation ↗
-              </button>
-              <button
-                onClick={() => onSelectConcept?.('First Law of Thermodynamics')}
-                className="text-xs px-2.5 py-1 rounded-sm border bg-[var(--surface-raised)] text-[var(--text-primary)] border-[var(--border-strong)] hover:border-black transition-all cursor-pointer font-medium"
-              >
-                KaTeX Step Derivations ↗
-              </button>
-              <button
-                onClick={() => onSelectConcept?.('Entropy & Clausius Inequality')}
-                className="text-xs px-2.5 py-1 rounded-sm border bg-[var(--status-trap)] text-[var(--status-trap-text)] border-red-200 hover:border-red-400 transition-all cursor-pointer font-medium"
-              >
-                [5 Marks ★★★] PYQ Rubrics ↗
-              </button>
+              {activePageData.conceptChips && activePageData.conceptChips.length > 0 ? (
+                activePageData.conceptChips.map((chip) => {
+                  const isFocused = activeChipId === chip.id;
+                  return (
+                    <button
+                      key={chip.id}
+                      onClick={() => {
+                        setActiveChipId(chip.id);
+                        onSelectConceptChip?.(chip);
+                        onSelectConcept?.(chip.label);
+                      }}
+                      className={`text-xs px-2.5 py-1 rounded-sm border transition-all cursor-pointer font-medium ${
+                        chip.badge === 'PYQ' || chip.badge === 'Trap'
+                          ? 'bg-[var(--status-trap)] text-[var(--status-trap-text)] border-red-200 hover:border-red-400'
+                          : chip.targetTool === 'visualizer' && chip.targetTab?.includes('3d')
+                          ? 'bg-[var(--status-concept-tag)] text-[var(--status-concept-tag-text)] border-purple-200 hover:border-purple-400'
+                          : chip.targetTool === 'visualizer' && chip.targetTab?.includes('2d')
+                          ? 'bg-[var(--status-high-yield)] text-[var(--status-high-yield-text)] border-green-200 hover:border-green-400'
+                          : 'bg-[var(--surface-raised)] text-[var(--text-primary)] border-[var(--border-strong)] hover:border-black'
+                      } ${isFocused ? 'chip-focused ring-1 ring-[var(--text-primary)]' : ''}`}
+                    >
+                      {chip.label}
+                    </button>
+                  );
+                })
+              ) : (
+                <div className="text-xs text-[var(--text-tertiary)]">No concept chips for this page</div>
+              )}
             </div>
           </div>
 
@@ -341,3 +270,5 @@ where $k_B = 1.380649 \\times 10^{-23} \\, \\text{J/K}$ is the Boltzmann constan
     </div>
   );
 };
+
+export default PdfViewer;
