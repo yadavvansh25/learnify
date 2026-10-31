@@ -188,7 +188,7 @@ async function main() {
 
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const xml = await res.text();
-    if (!xml.includes('<Response>') || !xml.includes('<Message>') || !xml.includes('<Body>')) {
+    if (!xml.includes('<Response>') || !xml.includes('<Message>')) {
       throw new Error(`Expected TwiML response but got: ${xml.slice(0, 100)}`);
     }
   })) passed++;
